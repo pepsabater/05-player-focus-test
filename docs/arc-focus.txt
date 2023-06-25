@@ -1,0 +1,14 @@
+// Crear un QGraphicsPathItem per representar l'arc de la llum
+QGraphicsPathItem* lightArcItem = new QGraphicsPathItem();
+
+// Crear una trajectòria per a l'arc de la llum
+QPainterPath path;
+path.arcTo(-50, -50, 100, 100, startAngle, spanAngle);
+lightArcItem->setPath(path);
+
+// Assignar un color sòlid al QGraphicsPathItem
+QColor color(Qt::yellow);
+lightArcItem->setBrush(color);
+
+// Afegir l'arc de la llum a la scena
+scene->addItem(lightArcItem);
