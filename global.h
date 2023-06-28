@@ -23,7 +23,6 @@
 #include <vector>
 #include <array>
 #include <string>
-#include "compass.h"
 
 // de l'aplicació
 #include "compass.h"
@@ -46,8 +45,8 @@
 #define PLAYER_TYPE_1    0
 
 // ecosistema del 'joc'
-#define INITIAL_PLAYERS  24  // 48
-#define MAX_PLAYERS      24  // 48
+#define INITIAL_PLAYERS  48  // 48
+#define MAX_PLAYERS      48  // 48
 
 // generador de números aleatoris (min, max, jump)
 int alNumGen (int, int, int);

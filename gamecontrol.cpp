@@ -138,90 +138,99 @@ bool retval=false;
 
 void GameController::playerGo(Player* player)
 {
-int newXPos=0;
-int newYPos=0;
+int newxpos=0;
+int newypos=0;
 
     if (player==nullptr)
         return;
 
     // enregistrem la seva posicio
-    newXPos=player->getXPos();
-    newYPos=player->getYPos();
+    newxpos=player->getXPos();
+    newypos=player->getYPos();
 
     switch(player->getCompass())
     {   // recalculem la posició segon la brúixola
     case COMPASS_N:
-        newYPos-=PLAYER_XDRIFT;
+        newypos-=PLAYER_XDRIFT;
         break;
     case COMPASS_NE:
-        newXPos+=PLAYER_XDRIFT;
-        newYPos-=PLAYER_YDRIFT;
+        newxpos+=PLAYER_XDRIFT;
+        newypos-=PLAYER_YDRIFT;
         break;
     case COMPASS_E:
-        newXPos+=PLAYER_XDRIFT;
+        newxpos+=PLAYER_XDRIFT;
         break;
     case COMPASS_SE:
-        newXPos+=PLAYER_XDRIFT;
-        newYPos+=PLAYER_YDRIFT;
+        newxpos+=PLAYER_XDRIFT;
+        newypos+=PLAYER_YDRIFT;
         break;
     case COMPASS_S:
-        newYPos+=PLAYER_YDRIFT;
+        newypos+=PLAYER_YDRIFT;
         break;
     case COMPASS_SW:
-        newXPos-=PLAYER_XDRIFT;
-        newYPos+=PLAYER_YDRIFT;
+        newxpos-=PLAYER_XDRIFT;
+        newypos+=PLAYER_YDRIFT;
         break;
     case COMPASS_W:
-        newXPos-=PLAYER_XDRIFT;
+        newxpos-=PLAYER_XDRIFT;
         break;
     case COMPASS_NW:
-        newXPos-=PLAYER_XDRIFT;
-        newYPos-=PLAYER_YDRIFT;
+        newxpos-=PLAYER_XDRIFT;
+        newypos-=PLAYER_YDRIFT;
         break;
     default:
         break;
     }
 
-    // el desplacem al nou lloc?
-    // si la nova posició és dins l'escena
-    if ((newXPos>=0 && newXPos <= VIEW_WIDTH-PIXMAP_WIDTH)
-        && (newYPos >= 0 && newYPos <= VIEW_HEIGHT-PIXMAP_HEIGHT))
-        // posem al'hora les coordinades del jugador
-        player->setPos(newXPos, newYPos);
-    else    // si no, retruc!
+    // si la nova posició és fora d'escena...
+    if ((newxpos < 0 || newxpos > VIEW_WIDTH-PIXMAP_WIDTH)
+        || (newypos < 0 || newypos > VIEW_HEIGHT-PIXMAP_HEIGHT))
+        // fem màgia!
         switch (player->getCompass())
         {
         case COMPASS_N:
-        case COMPASS_E:
-        case COMPASS_S:
-        case COMPASS_W:
-            playerGoReverse(player);
+            newypos = VIEW_HEIGHT - PIXMAP_HEIGHT;
             break;
         case COMPASS_NE:
-            if (newXPos > VIEW_WIDTH-PIXMAP_WIDTH)
-                playerGoLeft(player);
-            else
-                playerGoRight(player);
+            if (newxpos + PIXMAP_WIDTH >= VIEW_WIDTH - PIXMAP_WIDTH)
+                newxpos = 0;
+
+            if (newypos - PIXMAP_HEIGHT <= 0 )
+                newypos = VIEW_HEIGHT - PIXMAP_HEIGHT;
+            break;
+        case COMPASS_E:
+            newxpos = 0;
             break;
         case COMPASS_SE:
-            if (newXPos > VIEW_WIDTH-PIXMAP_WIDTH)
-                playerGoRight(player);
-            else
-                playerGoLeft(player);
+            if (newxpos + PIXMAP_WIDTH >= VIEW_WIDTH - PIXMAP_WIDTH)
+                newxpos = 0;
+
+            if (newypos + PIXMAP_HEIGHT >= VIEW_HEIGHT - PIXMAP_HEIGHT)
+                newypos = 0;
+            break;
+        case COMPASS_S:
+            newypos = 0;
             break;
         case COMPASS_SW:
-            if (newXPos < 0)
-                playerGoLeft(player);
-            else
-                playerGoRight(player);
+            if (newxpos - PIXMAP_WIDTH <= 0)
+                newxpos = VIEW_WIDTH - PIXMAP_WIDTH;
+
+            if (newypos + PIXMAP_HEIGHT >= VIEW_HEIGHT - PIXMAP_HEIGHT)
+                newypos = 0;
             break;
+        case COMPASS_W:
+            newxpos = VIEW_WIDTH - PIXMAP_WIDTH;
+            break;
+
         case COMPASS_NW:
-            if (newXPos < 0)
-                playerGoRight(player);
-            else
-                playerGoLeft(player);
+            if (newxpos - PIXMAP_WIDTH <= 0)
+                newxpos = VIEW_WIDTH - PIXMAP_WIDTH;
+
+            if (newypos - PIXMAP_HEIGHT <= 0)
+                newypos = VIEW_HEIGHT - PIXMAP_HEIGHT;
             break;
         }
+    player->setPos(newxpos, newypos);
 }
 
 //--------------------------------
